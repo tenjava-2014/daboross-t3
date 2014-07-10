@@ -1,0 +1,3 @@
+name: daboross-t3
+main: com.tenjava.entries.daboross.t3.TenJava
+version: '${project.version}'
