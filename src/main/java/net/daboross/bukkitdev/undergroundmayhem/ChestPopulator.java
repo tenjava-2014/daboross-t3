@@ -18,13 +18,27 @@ package net.daboross.bukkitdev.undergroundmayhem;
 
 import java.util.Random;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
 
 public class ChestPopulator extends BlockPopulator {
 
     @Override
-    public void populate(final World world, final Random random, final Chunk source) {
-
+    public void populate(final World world, final Random r, final Chunk source) {
+        Location spawn = world.getSpawnLocation();
+        if (spawn.getChunk() == source) {
+            int x = spawn.getBlockX() + 15 - r.nextInt(30);
+            int z = spawn.getBlockZ() + 15 - r.nextInt(30);
+            Block block = world.getHighestBlockAt(x, z);
+            block.setType(Material.OBSIDIAN);
+            block = block.getRelative(BlockFace.UP);
+            block.setType(Material.OBSIDIAN);
+            block = block.getRelative(BlockFace.UP);
+            block.setType(Material.CHEST);
+        }
     }
 }

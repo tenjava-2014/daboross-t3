@@ -25,16 +25,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
 
-public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
+public class MayhemPlugin extends JavaPlugin implements Listener {
+
+    private Rockets rockets;
 
     @Override
     public void onEnable() {
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(this, this);
+        rockets = new Rockets();
+        getServer().getPluginManager().registerEvents(new OriginChestListener(this), this);
+        getServer().getPluginManager().registerEvents(new RocketListener(this), this);
 
         MetricsLite metrics = null;
         try {
@@ -45,6 +47,11 @@ public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
         if (metrics != null) {
             metrics.start();
         }
+    }
+
+    @Override
+    public void onDisable() {
+
     }
 
     @Override
@@ -63,5 +70,9 @@ public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
         sender.sendMessage("Sending to Mayhem");
         ((Player) sender).teleport(mayhem.getSpawnLocation());
         return true;
+    }
+
+    public Rockets getRockets() {
+        return rockets;
     }
 }
