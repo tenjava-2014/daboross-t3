@@ -1,3 +1,6 @@
-name: daboross-t3
-main: com.tenjava.entries.daboross.t3.TenJava
-version: '${project.version}'
+name: ${project.name}
+main: net.daboross.bukkitdev.underground-mahem.UndergroundMahemPlugin
+version: ${project.version}
+author: Dabo Ross
+description: ${project.description}
+url: ${project.url}

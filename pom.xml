@@ -1,66 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Copyright (C) 2014 Dabo Ross <http://daboross.net>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.tenjava.entries.daboross.t3</groupId> <!-- you're welcome to change this -->
-	<artifactId>daboross-t3</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>ten.java 2014 July</name>
-	<description>Contest entry for ten.java 2014 July</description>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <groupId>net.daboross.bukkitdev.underground-mahem</groupId>
+    <artifactId>underground-mahem</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
-	</repositories>
+    <name>UndergroundMahem</name>
+    <description>UndergroundMahem</description>
+    <url>http://daboross.net</url>
+    <inceptionYear>2014</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL) Version 3</name>
+            <url>http://www.gnu.org/licenses/gpl.html</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>daboross</id>
+            <name>Dabo Ross</name>
+            <email>daboross@daboross.net</email>
+            <url>http://daboross.net</url>
+            <timezone>-8</timezone>
+        </developer>
+    </developers>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.9-R0.2-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+    <properties>
+        <netbeans.hint.license>gpl30</netbeans.hint.license>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-	<build>
-		<defaultGoal>clean package</defaultGoal>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<!-- Per the rules at http://git.io/lAJgzQ, you're free to change
-					     "1.6" to "1.7" or "1.8" if you wish. This will not impact your score. -->
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources</directory>
-				<includes>
-					<include>*</include>
-				</includes>
-			</resource>
-			<!-- Uncomment to include files (example is LICENSE file) from the project root
-			<resource>
-				<targetPath>.</targetPath>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>LICENSE</include>
-				</includes>
-			</resource>
-			-->
-		</resources>
-	</build>
+    <repositories>
+        <repository>
+            <id>repo-daboross-net</id>
+            <url>http://repo.daboross.net/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.7.9-R0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.daboross.metrics.bukkit</groupId>
+            <artifactId>metrics-lite</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <defaultGoal>clean package</defaultGoal>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.mcstats</pattern>
+                                    <shadedPattern>net.daboross.bukkitdev.underground-mahem.libraries.mcstats</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
