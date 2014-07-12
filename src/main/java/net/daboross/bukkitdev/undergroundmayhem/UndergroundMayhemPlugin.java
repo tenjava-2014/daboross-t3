@@ -49,7 +49,7 @@ public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
-        return new MainGenerator(2, 3);
+        return new MainGenerator(1, 2.5);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
         }
         double frequency = Double.parseDouble(args[0]);
         double amplitude = Double.parseDouble(args[1]);
-        World mayhem = Bukkit.createWorld(new WorldCreator("Mayhem").generator(new MainGenerator(frequency, amplitude)));
+        World mayhem = Bukkit.createWorld(new WorldCreator("Mayhem" + frequency + "-" + amplitude).generator(new MainGenerator(frequency, amplitude)));
         sender.sendMessage("Sending to Mayhem");
         ((Player) sender).teleport(mayhem.getSpawnLocation());
         return true;

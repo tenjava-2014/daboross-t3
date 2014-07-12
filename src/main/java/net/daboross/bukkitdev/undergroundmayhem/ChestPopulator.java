@@ -21,7 +21,7 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
-public class WallPopulator extends BlockPopulator {
+public class ChestPopulator extends BlockPopulator {
 
     @Override
     public void populate(final World world, final Random random, final Chunk source) {

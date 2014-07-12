@@ -63,17 +63,17 @@ public class MainGenerator extends ChunkGenerator {
         byte[][] result = new byte[world.getMaxHeight() / 16][];
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                int bedrockHeight = (int) (1 + noise.noise(chunkX * 16 + x, chunkZ * 16 + z) * 3);
+                int bedrockHeight = (int) (1 + noise.noise(chunkX * 16 + x, chunkZ * 16 + z) * 2);
                 int stoneHeight = (int) (30 + octave.noise(chunkX * 16 + x, chunkZ * 16 + z, frequency, amplitude));
                 if (stoneHeight > world.getMaxHeight()) {
                     stoneHeight = world.getMaxHeight();
                 }
-                for (int y = 0; y < stoneHeight || y < bedrockHeight; y++) {
+                for (int y = 0; y <= stoneHeight || y < bedrockHeight; y++) {
                     if (result[y >> 4] == null) {
                         result[y >> 4] = new byte[4096];
                     }
                     Material material;
-                    if (y < bedrockHeight) {
+                    if (y <= bedrockHeight) {
                         material = Material.BEDROCK;
                     } else {
                         material = Material.STONE;
@@ -87,6 +87,6 @@ public class MainGenerator extends ChunkGenerator {
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        return Arrays.<BlockPopulator>asList(new WallPopulator());
+        return Arrays.<BlockPopulator>asList(new ChestPopulator());
     }
 }
