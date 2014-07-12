@@ -34,7 +34,7 @@ public class MayhemPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        rockets = new Rockets();
+        rockets = new Rockets(this);
         getServer().getPluginManager().registerEvents(new OriginChestListener(this), this);
         getServer().getPluginManager().registerEvents(new RocketListener(this), this);
 

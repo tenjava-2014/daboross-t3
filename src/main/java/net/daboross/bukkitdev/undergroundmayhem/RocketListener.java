@@ -18,10 +18,14 @@ package net.daboross.bukkitdev.undergroundmayhem;
 
 import java.util.HashMap;
 import java.util.UUID;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class RocketListener implements Listener {
 
@@ -42,5 +46,18 @@ public class RocketListener implements Listener {
                 timeouts.put(p.getUniqueId(), System.currentTimeMillis() + 350);
             }
         }
+    }
+
+    @EventHandler
+    public void onHit(ProjectileHitEvent evt) {
+        final Entity e = evt.getEntity();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (e.hasMetadata("isRocket")) {
+                    e.remove(); // We don't need them sticking in the ground
+                }
+            }
+        }.runTask(plugin);
     }
 }

@@ -25,12 +25,19 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 public class Rockets {
 
     private static final String name = ChatColor.RED + "Rocket";
     private static final List<String> lore = Arrays.asList(ChatColor.GREEN + "It's a rocket");
+
+    private final MayhemPlugin plugin;
+
+    public Rockets(final MayhemPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     public ItemStack makeRocket() {
         ItemStack rocket = new ItemStack(Material.BLAZE_ROD);
@@ -61,10 +68,11 @@ public class Rockets {
 
     private void shootFrom(Player player) {
         Location arrowLocation = player.getEyeLocation().clone(); // Clone the player's position
-        arrowLocation.add(arrowLocation.getDirection()); // Move one blcok away
+        arrowLocation.add(arrowLocation.getDirection().multiply(2)); // Move two blcok away
         Vector direction = arrowLocation.getDirection(); // Get the direction
         Arrow a = arrowLocation.getWorld().spawnArrow(arrowLocation, direction, 2.0f, 2);
         a.setBounce(false);
         a.setShooter(player);
+        a.setMetadata("isRocket", new FixedMetadataValue(plugin, Boolean.TRUE));
     }
 }

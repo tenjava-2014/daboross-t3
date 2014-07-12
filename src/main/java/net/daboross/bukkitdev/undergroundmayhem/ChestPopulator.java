@@ -23,22 +23,53 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class ChestPopulator extends BlockPopulator {
 
+    private void createOriginChest(World world, Random r) {
+        Location spawn = world.getSpawnLocation();
+        // origin chest
+        int x = spawn.getBlockX() + 15 - r.nextInt(30);
+        int z = spawn.getBlockZ() + 15 - r.nextInt(30);
+        Block block = world.getHighestBlockAt(x, z);
+        block.setType(Material.OBSIDIAN);
+        block = block.getRelative(BlockFace.UP);
+        block.setType(Material.OBSIDIAN);
+        block = block.getRelative(BlockFace.UP);
+        block.setType(Material.CHEST);
+    }
+
     @Override
     public void populate(final World world, final Random r, final Chunk source) {
-        Location spawn = world.getSpawnLocation();
-        if (spawn.getChunk() == source) {
-            int x = spawn.getBlockX() + 15 - r.nextInt(30);
-            int z = spawn.getBlockZ() + 15 - r.nextInt(30);
-            Block block = world.getHighestBlockAt(x, z);
-            block.setType(Material.OBSIDIAN);
-            block = block.getRelative(BlockFace.UP);
-            block.setType(Material.OBSIDIAN);
-            block = block.getRelative(BlockFace.UP);
-            block.setType(Material.CHEST);
+        if (world.getSpawnLocation().getChunk() == source) createOriginChest(world, r);
+
+        if (r.nextInt(100) > 70) {
+            // spawn a chest
+            int x = r.nextInt(16) + source.getX() * 16 + source.getZ() * 16;
+            int z = r.nextInt(16);
+            Block location = world.getHighestBlockAt(x, z);
+            location.setType(Material.CHEST);
+            Chest chest = (Chest) location.getState();
+            Inventory inv = chest.getBlockInventory();
+            for (int i = 0; i < 1 + r.nextInt(2); i++) {
+                switch (r.nextInt(4)) {
+                    case 0:
+                        inv.addItem(new ItemStack(Material.APPLE, 1 + r.nextInt(4)));
+                    case 1:
+                        inv.addItem(new ItemStack(Material.WOOD_PICKAXE, 1));
+                    case 2:
+                        if (r.nextInt(100) > 3) {
+                            inv.addItem(new ItemStack(Material.GOLDEN_APPLE, 1 + r.nextInt(1)));
+                        }
+                    case 3:
+                        inv.addItem(new ItemStack(Material.LOG, 5 + r.nextInt(20)));
+                }
+            }
+            chest.update();
         }
     }
 }

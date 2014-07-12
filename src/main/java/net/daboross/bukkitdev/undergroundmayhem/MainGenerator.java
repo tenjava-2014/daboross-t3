@@ -63,7 +63,7 @@ public class MainGenerator extends ChunkGenerator {
         byte[][] result = new byte[world.getMaxHeight() / 16][];
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                int bedrockHeight = (int) (1 + noise.noise(chunkX * 16 + x, chunkZ * 16 + z) * 2);
+                int bedrockHeight = (int) (3 + Math.ceil(noise.noise(chunkX * 16 + x, chunkZ * 16 + z) * 2));
                 int stoneHeight = (int) (30 + octave.noise(chunkX * 16 + x, chunkZ * 16 + z, frequency, amplitude));
                 if (stoneHeight > world.getMaxHeight()) {
                     stoneHeight = world.getMaxHeight();
