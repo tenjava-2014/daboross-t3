@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.undergroundmayhem;
+package net.daboross.bukkitdev.mayhem;
 
 import java.util.Arrays;
 import java.util.List;

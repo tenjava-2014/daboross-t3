@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.undergroundmayhem;
+package net.daboross.bukkitdev.mayhem;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import net.daboross.bukkitdev.undergroundmayhem.populators.ChestPopulator;
-import net.daboross.bukkitdev.undergroundmayhem.populators.LiquidPopulator;
+import net.daboross.bukkitdev.mayhem.populators.ChestPopulator;
+import net.daboross.bukkitdev.mayhem.populators.LiquidPopulator;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.undergroundmayhem;
+package net.daboross.bukkitdev.mayhem.listeners;
 
 import java.util.HashMap;
 import java.util.UUID;
-import org.bukkit.Location;
+import net.daboross.bukkitdev.mayhem.MayhemPlugin;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -14,9 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.undergroundmayhem;
+package net.daboross.bukkitdev.mayhem;
 
 import java.io.IOException;
+import net.daboross.bukkitdev.mayhem.listeners.NoSlimeListener;
+import net.daboross.bukkitdev.mayhem.listeners.OriginChestListener;
+import net.daboross.bukkitdev.mayhem.listeners.RocketListener;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;

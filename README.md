@@ -25,7 +25,7 @@ Usage
   ```
   worlds:
     world:
-      generator: UndergroundMayhem
+      generator: StoneMayhem
   ```
 * Delete the `world/` world folder, so that it will regenerate with StoneMayhem
 * Start the server.
