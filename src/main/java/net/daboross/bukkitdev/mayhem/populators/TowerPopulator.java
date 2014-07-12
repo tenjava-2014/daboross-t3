@@ -139,7 +139,7 @@ public class TowerPopulator extends BlockPopulator {
 
     public void makeTower(Block block, Random random) {
 
-        for (int y = -3; y < 0; y++) {
+        for (int y = -3; y <= 0; y++) {
             Block yBlock = block.getRelative(0, y, 0);
             for (BlockFace face : BlockFace.values()) {
                 if (yBlock.getRelative(face).getType() == Material.AIR) {
@@ -147,9 +147,9 @@ public class TowerPopulator extends BlockPopulator {
                 }
             }
         }
-        for (int y = 0; y < 8; y++) {
+        for (int y = 0; y <= 8; y++) {
             Block yBlock = block.getRelative(0, y, 0);
-            yBlock.setType(Material.WOOD);
+            yBlock.setType(Material.LOG);
             for (BlockFace face : FACES) {
                 if (random.nextBoolean()) {
                     yBlock.getRelative(face).setType(Material.STONE);
@@ -158,7 +158,7 @@ public class TowerPopulator extends BlockPopulator {
                 }
             }
         }
-        for (int y = 9; y < 19; y++) {
+        for (int y = 9; y <= 19; y++) {
             Block yBlock = block.getRelative(0, y, 0);
             yBlock.setType(Material.GLASS);
         }
