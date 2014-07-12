@@ -50,11 +50,6 @@ public class MayhemPlugin extends JavaPlugin implements Listener {
     }
 
     @Override
-    public void onDisable() {
-
-    }
-
-    @Override
     public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
         return new MainGenerator(1, 2.5);
     }

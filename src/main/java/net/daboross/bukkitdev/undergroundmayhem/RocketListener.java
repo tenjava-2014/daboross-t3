@@ -37,7 +37,7 @@ public class RocketListener implements Listener {
         Player p = evt.getPlayer();
         if (plugin.getRockets().isRocket(p.getItemInHand())) {
             Long timeout = timeouts.get(p.getUniqueId());
-            if (timeout != null && timeout < System.currentTimeMillis()) {
+            if (timeout == null || timeout < System.currentTimeMillis()) {
                 plugin.getRockets().launch(p);
                 timeouts.put(p.getUniqueId(), System.currentTimeMillis() + 350);
             }
