@@ -29,4 +29,8 @@ Usage
   ```
 * Delete the `world/` world folder, so that it will regenerate with StoneMayhem
 * Start the server.
-* Expore! You'll find lava/water split lakes, towers, and sanctuaries.
+* Expore! You'll find lava/water split lakes, and towers.
+ * Look inside the origin chest (above two obsidian blocks, near the spawn point) for some starting materials (including an Iron pickaxe, but also other random items).
+ * You'll find towers on top of mountains, each tower contains a bunch of wood inside it that you can use to burn in a furnace,
+   or make tools to fight with. There are no trees, so the wood you find in these towers is all you get.
+ * Each tower also has a chest with some extra goodies in it, that you will find useful for survival!
