@@ -18,13 +18,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.daboross.bukkitdev.underground-mahem</groupId>
-    <artifactId>underground-mahem</artifactId>
+    <groupId>net.daboross.bukkitdev.underground-mayhem</groupId>
+    <artifactId>underground-mayhem</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>UndergroundMahem</name>
-    <description>UndergroundMahem</description>
+    <name>UndergroundMayhem</name>
+    <description>UndergroundMayhem</description>
     <url>http://daboross.net</url>
     <inceptionYear>2014</inceptionYear>
     <licenses>
@@ -105,7 +105,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.mcstats</pattern>
-                                    <shadedPattern>net.daboross.bukkitdev.underground-mahem.libraries.mcstats</shadedPattern>
+                                    <shadedPattern>net.daboross.bukkitdev.undergroundmayhem.libraries.mcstats</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

@@ -1,6 +1,7 @@
 name: ${project.name}
-main: net.daboross.bukkitdev.underground-mahem.UndergroundMahemPlugin
+main: net.daboross.bukkitdev.undergroundmayhem.UndergroundMayhemPlugin
 version: ${project.version}
-author: Dabo Ross
 description: ${project.description}
 url: ${project.url}
+author: Dabo Ross
+load: startup

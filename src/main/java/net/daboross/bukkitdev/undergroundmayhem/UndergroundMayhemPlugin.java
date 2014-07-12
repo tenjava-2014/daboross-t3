@@ -14,17 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.undergroundmahem;
+package net.daboross.bukkitdev.undergroundmayhem;
 
 import java.io.IOException;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
 
-public class UndergroundMahemPlugin extends JavaPlugin implements Listener {
+public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
@@ -43,12 +42,7 @@ public class UndergroundMahemPlugin extends JavaPlugin implements Listener {
     }
 
     @Override
-    public void onDisable() {
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage("UndergroundMahem doesn't know about the command /" + cmd.getName());
-        return true;
+    public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
+        return new MainGenerator();
     }
 }
