@@ -17,6 +17,12 @@
 package net.daboross.bukkitdev.undergroundmayhem;
 
 import java.io.IOException;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -43,6 +49,19 @@ public class UndergroundMayhemPlugin extends JavaPlugin implements Listener {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
-        return new MainGenerator();
+        return new MainGenerator(2, 3);
+    }
+
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        if (args.length < 2) {
+            return false;
+        }
+        double frequency = Double.parseDouble(args[0]);
+        double amplitude = Double.parseDouble(args[1]);
+        World mayhem = Bukkit.createWorld(new WorldCreator("Mayhem").generator(new MainGenerator(frequency, amplitude)));
+        sender.sendMessage("Sending to Mayhem");
+        ((Player) sender).teleport(mayhem.getSpawnLocation());
+        return true;
     }
 }

@@ -5,3 +5,5 @@ description: ${project.description}
 url: ${project.url}
 author: Dabo Ross
 load: startup
+commands:
+  mayhem:
