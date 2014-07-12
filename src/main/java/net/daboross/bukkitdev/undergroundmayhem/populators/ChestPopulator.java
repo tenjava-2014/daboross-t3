@@ -47,29 +47,36 @@ public class ChestPopulator extends BlockPopulator {
     public void populate(final World world, final Random r, final Chunk source) {
         if (world.getSpawnLocation().getChunk() == source) createOriginChest(world, r);
 
-        if (r.nextInt(100) > 70) {
+        if (r.nextInt(100) > 90) {
             // spawn a chest
-            int x = r.nextInt(16) + source.getX() * 16 + source.getZ() * 16;
-            int z = r.nextInt(16);
-            Block location = world.getHighestBlockAt(x, z).getRelative(0, 2, 0);
-            location.setType(Material.CHEST);
-            Chest chest = (Chest) location.getState();
-            Inventory inv = chest.getBlockInventory();
-            for (int i = 0; i < 1 + r.nextInt(2); i++) {
-                switch (r.nextInt(4)) {
-                    case 0:
-                        inv.addItem(new ItemStack(Material.APPLE, 1 + r.nextInt(4)));
-                    case 1:
-                        inv.addItem(new ItemStack(Material.WOOD_PICKAXE, 1));
-                    case 2:
-                        if (r.nextInt(100) > 3) {
-                            inv.addItem(new ItemStack(Material.GOLDEN_APPLE, 1 + r.nextInt(1)));
-                        }
-                    case 3:
-                        inv.addItem(new ItemStack(Material.LOG, 5 + r.nextInt(20)));
+            int x = r.nextInt(16) + source.getX() * 16;
+            int z = r.nextInt(16) + source.getZ() * 16;
+            Block highest = world.getHighestBlockAt(x, z);
+            if (!LiquidPopulator.LIQUIDS.contains(highest.getType())) {
+                // don't spawn on water
+                Block block = highest.getRelative(0, 2, 0);
+                block.setType(Material.CHEST);
+                Chest chest = (Chest) block.getState();
+                Inventory inv = chest.getBlockInventory();
+
+                // populate with items
+                for (int i = 0; i < 1 + r.nextInt(2); i++) {
+                    switch (r.nextInt(4)) {
+                        case 0:
+                            inv.addItem(new ItemStack(Material.APPLE, 1 + r.nextInt(4)));
+                        case 1:
+                            inv.addItem(new ItemStack(Material.WOOD_PICKAXE, 1));
+                        case 2:
+                            if (r.nextInt(100) > 3) {
+                                inv.addItem(new ItemStack(Material.GOLDEN_APPLE, 1 + r.nextInt(1)));
+                            }
+                        case 3:
+                            inv.addItem(new ItemStack(Material.LOG, 5 + r.nextInt(20)));
+                    }
                 }
+
+                chest.update();
             }
-            chest.update();
         }
     }
 }

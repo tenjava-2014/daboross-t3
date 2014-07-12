@@ -28,8 +28,7 @@ import org.bukkit.generator.BlockPopulator;
 
 public class LiquidPopulator extends BlockPopulator {
 
-    private static final List<Material> LIQUIDS = Arrays.asList(Material.LAVA, Material.WATER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER, Material.AIR);
-    // AIR is a liquid, so we can keep the decision to not have a lake somewhere
+    public static final List<Material> LIQUIDS = Arrays.asList(Material.LAVA, Material.WATER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER);
 
     private Material getMaterial(World world, Chunk source, Random random) {
         Block zeroBlock = source.getBlock(0, 5, 0);
@@ -64,14 +63,11 @@ public class LiquidPopulator extends BlockPopulator {
                 }
             }
         }
-        if (random.nextBoolean()) {
-            if (random.nextInt(10) <= 7) {
-                return Material.LAVA;
-            } else {
-                return Material.WATER;
-            }
+        if (random.nextInt(3) == 0) {
+            return Material.WATER;
+        } else {
+            return Material.LAVA;
         }
-        return Material.AIR;
     }
 
     @Override
@@ -81,12 +77,10 @@ public class LiquidPopulator extends BlockPopulator {
             for (int z = 0; z < 16; z++) {
                 Block block = source.getBlock(x, 5, z);
                 if (block.getType() == Material.AIR) {
+                    // We only want to calculate liquid type if we need to use it
                     if (liquidType == null) {
-                        // We only want to calculate liquid type if there's a chance we will be able to use that type.s
                         liquidType = getMaterial(world, source, random);
-                        if (liquidType == Material.AIR) {
-                            return; // no liquid for this chunk.
-                        } else if (liquidType == Material.STATIONARY_LAVA) {
+                        if (liquidType == Material.STATIONARY_LAVA) {
                             liquidType = Material.LAVA;
                         } else if (liquidType == Material.STATIONARY_WATER) {
                             liquidType = Material.WATER;
