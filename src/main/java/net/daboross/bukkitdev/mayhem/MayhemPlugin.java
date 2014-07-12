@@ -18,8 +18,6 @@ package net.daboross.bukkitdev.mayhem;
 
 import java.io.IOException;
 import net.daboross.bukkitdev.mayhem.listeners.NoSlimeListener;
-import net.daboross.bukkitdev.mayhem.listeners.OriginChestListener;
-import net.daboross.bukkitdev.mayhem.listeners.RocketListener;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
@@ -28,11 +26,8 @@ import org.mcstats.MetricsLite;
 
 public class MayhemPlugin extends JavaPlugin implements Listener {
 
-    private Rockets rockets;
-
     @Override
     public void onEnable() {
-        rockets = new Rockets(this);
 
         MetricsLite metrics = null;
         try {
@@ -44,7 +39,7 @@ public class MayhemPlugin extends JavaPlugin implements Listener {
             metrics.start();
         }
 
-        registerListeners(new OriginChestListener(this), new RocketListener(this), new NoSlimeListener());
+        registerListeners(new NoSlimeListener());
     }
 
     private void registerListeners(Listener... listeners) {
@@ -57,9 +52,5 @@ public class MayhemPlugin extends JavaPlugin implements Listener {
     @Override
     public ChunkGenerator getDefaultWorldGenerator(final String worldName, final String id) {
         return new MainGenerator(1, 2.5);
-    }
-
-    public Rockets getRockets() {
-        return rockets;
     }
 }
