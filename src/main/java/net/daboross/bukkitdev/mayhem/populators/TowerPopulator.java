@@ -38,8 +38,9 @@ public class TowerPopulator extends BlockPopulator {
         }
     }
 
-    private Block isLedge(Block startingPosition, BlockFace ledgeDirection) throws AdjacentChunkNotLoadedException {
+    private Block isLedge(Block startingPosition, BlockFace ledgeDirection, int count) throws AdjacentChunkNotLoadedException {
         boolean switched = false;
+        boolean aheadIsLedge = true;
         BlockFace currentDirection;
         if (ledgeDirection == BlockFace.NORTH || ledgeDirection == BlockFace.SOUTH) {
             currentDirection = BlockFace.EAST;
@@ -50,14 +51,22 @@ public class TowerPopulator extends BlockPopulator {
         while (true) {
             ensureAdjacentChunkLoaded(currentBlock, ledgeDirection);
             ensureAdjacentChunkLoaded(currentBlock, currentDirection);
-            if (currentBlock.getRelative(ledgeDirection).getRelative(BlockFace.DOWN).getType() != Material.AIR) {
-                Block ledgeBlock = isLedge(currentBlock.getRelative(ledgeDirection), ledgeDirection);
+            if (currentBlock.getRelative(ledgeDirection).getType() != Material.AIR) {
+                return currentBlock.getRelative(ledgeDirection);
+            }
+            if (currentBlock.getType() != Material.AIR) {
+                return currentBlock;
+            }
+            if (!aheadIsLedge && currentBlock.getRelative(ledgeDirection).getRelative(BlockFace.DOWN).getType() != Material.AIR) {
+                Block ledgeBlock = isLedge(currentBlock.getRelative(ledgeDirection), ledgeDirection, count + 1);
                 if (ledgeBlock != null) {// if we aren't a ledge, report so.
                     return ledgeBlock;
+                } else {
+                    aheadIsLedge = true;
                 }
+            } else if (currentBlock.getRelative(ledgeDirection).getRelative(BlockFace.DOWN).getType() == Material.AIR) {
+                aheadIsLedge = false;
             }
-            if (currentBlock.getRelative(ledgeDirection).getType() != Material.AIR)
-                return currentBlock.getRelative(ledgeDirection);
             currentBlock = currentBlock.getRelative(currentDirection);
             if (currentBlock.getRelative(BlockFace.DOWN).getType() == Material.AIR) {
                 if (switched) {
@@ -99,7 +108,7 @@ public class TowerPopulator extends BlockPopulator {
                 }
                 boolean onTop = true;
                 for (BlockFace face : FACES) {
-                    Block nonLedgeBlock = isLedge(currentBlock, face);
+                    Block nonLedgeBlock = isLedge(currentBlock, face, 0);
                     if (nonLedgeBlock != null) {
                         currentBlock = nonLedgeBlock;
                         onTop = false;
