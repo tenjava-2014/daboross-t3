@@ -17,10 +17,8 @@
 package net.daboross.bukkitdev.mayhem.populators;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -99,50 +97,23 @@ public class TowerPopulator extends BlockPopulator {
                 if (changed) {
                     continue;
                 }
-                while (true) {
-                    boolean switchedSecond = false;
-                    BlockFace currentFace = BlockFace.NORTH;
-                    BlockFace secondFace = BlockFace.EAST;
-                    ensureAdjacentChunkLoaded(currentBlock, currentFace);
-                    Block relativeBlock = currentBlock.getRelative(currentFace);
-                    while (relativeBlock.getRelative(0, -1, 0).getType() != Material.AIR) {
-                        currentBlock = relativeBlock;
-                        ensureAdjacentChunkLoaded(currentBlock, currentFace);
-                        relativeBlock = currentBlock.getRelative(currentFace);
-                    }
-                    while (relativeBlock.getRelative(0, -1, 0).getType() == Material.AIR) {
-                        ensureAdjacentChunkLoaded(currentBlock, secondFace);
-                        currentBlock = currentBlock.getRelative(secondFace);
-                        ensureAdjacentChunkLoaded(currentBlock, currentFace);
-                        relativeBlock = currentBlock.getRelative(currentFace);
-                    }
-                }
+                boolean onTop = true;
                 for (BlockFace face : FACES) {
-                    if (onTopOf.contains(face)) {
-                        continue;
+                    Block nonLedgeBlock = isLedge(currentBlock, face);
+                    if (nonLedgeBlock != null) {
+                        currentBlock = nonLedgeBlock;
+                        onTop = false;
+                        break;
                     }
-                    ensureAdjacentChunkLoaded(currentBlock, face);
-
-                    Block faceRelative = currentBlock.getRelative(face);
-                    while (faceRelative.getRelative(BlockFace.DOWN).getType() != Material.AIR && faceRelative.getType() == Material.AIR) {
-                        currentBlock = faceRelative;
-                        ensureAdjacentChunkLoaded(currentBlock, face);
-                        faceRelative = currentBlock.getRelative(face);
-                    }
-                    if (faceRelative.getType() != Material.AIR) {
-
-                        break; // Let's let the first two inner loops deal with this.
-                    }
-                    // We're on top!
-                    onTopOf.add(face);
                 }
-                if (onTopOf.containsAll(FACES)) {
+                if (onTop) {
                     currentBlock.setType(Material.WOOL);
                     return;
                 }
             }
         } catch (AdjacentChunkNotLoadedException ignored) {
-            return;// Let's let the loaded chunk deal with this.
+            // Let's let the loaded chunk deal with this.
+            // ignore the exception and just don't put a tower.
         }
     }
 
