@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.daboross.bukkitdev.undergroundmayhem;
+package net.daboross.bukkitdev.undergroundmayhem.populators;
 
 import java.util.Random;
 import org.bukkit.Chunk;
@@ -51,7 +51,7 @@ public class ChestPopulator extends BlockPopulator {
             // spawn a chest
             int x = r.nextInt(16) + source.getX() * 16 + source.getZ() * 16;
             int z = r.nextInt(16);
-            Block location = world.getHighestBlockAt(x, z);
+            Block location = world.getHighestBlockAt(x, z).getRelative(0, 2, 0);
             location.setType(Material.CHEST);
             Chest chest = (Chest) location.getState();
             Inventory inv = chest.getBlockInventory();

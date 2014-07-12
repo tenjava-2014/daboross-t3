@@ -16,6 +16,7 @@
  */
 package net.daboross.bukkitdev.undergroundmayhem;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -36,7 +37,9 @@ public class OriginChestListener implements Listener {
     public void onChestOpen(InventoryOpenEvent evt) {
         if (evt.getInventory().getHolder() instanceof Chest && evt.getPlayer() instanceof Player) {
             Block block = ((Chest) evt.getInventory().getHolder()).getBlock();
-            if (block.getLocation().distance(block.getWorld().getSpawnLocation()) < 50) {
+            Location blockLocation = block.getLocation();
+            Location spawnLocation = block.getWorld().getSpawnLocation();
+            if (Math.abs(blockLocation.getX() - spawnLocation.getX()) <= 15 && Math.abs(blockLocation.getZ() - spawnLocation.getZ()) < 15) {
                 evt.setCancelled(true);
                 final Player player = (Player) evt.getPlayer();
                 plugin.getServer().getScheduler().runTask(plugin, new Runnable() {

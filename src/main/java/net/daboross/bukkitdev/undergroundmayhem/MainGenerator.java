@@ -19,6 +19,8 @@ package net.daboross.bukkitdev.undergroundmayhem;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import net.daboross.bukkitdev.undergroundmayhem.populators.ChestPopulator;
+import net.daboross.bukkitdev.undergroundmayhem.populators.LiquidPopulator;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
@@ -87,6 +89,6 @@ public class MainGenerator extends ChunkGenerator {
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        return Arrays.<BlockPopulator>asList(new ChestPopulator());
+        return Arrays.asList(new ChestPopulator(), new LiquidPopulator());
     }
 }
