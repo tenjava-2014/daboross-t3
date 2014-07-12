@@ -86,8 +86,6 @@ public class LiquidPopulator extends BlockPopulator {
                             liquidType = Material.WATER;
                         }
                     }
-                    block.setType(liquidType);
-                    block = block.getRelative(BlockFace.DOWN);
                     while (block.getType() == Material.AIR) {
                         block.setType(liquidType);
                         block = block.getRelative(BlockFace.DOWN);
