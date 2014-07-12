@@ -16,60 +16,20 @@
  */
 package net.daboross.bukkitdev.undergroundmayhem;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class OriginChestListener implements Listener {
 
     private final MayhemPlugin plugin;
-    private final YamlConfiguration storage;
-    private final Path saveLocation;
-    private List<String> opened;
 
     public OriginChestListener(final MayhemPlugin plugin) {
         this.plugin = plugin;
-        saveLocation = plugin.getDataFolder().toPath().resolve("origin-chest.yml");
-        if (Files.exists(saveLocation)) {
-            storage = YamlConfiguration.loadConfiguration(saveLocation.toFile());
-            opened = storage.getStringList("opened");
-        } else {
-            storage = new YamlConfiguration();
-            storage.options().header("Origin chest store");
-            try {
-                storage.save(saveLocation.toFile());
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.WARNING, "Couldn't save " + saveLocation.toAbsolutePath(), e);
-            }
-        }
-        if (opened == null) {
-            opened = new ArrayList<String>();
-        }
-    }
-
-    public void save() {
-        storage.set("opened", opened);
-        try {
-            storage.save(saveLocation.toFile());
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Couldn't save " + saveLocation.toAbsolutePath(), e);
-        }
     }
 
     @EventHandler
@@ -79,41 +39,14 @@ public class OriginChestListener implements Listener {
             if (block.getLocation().distance(block.getWorld().getSpawnLocation()) < 50) {
                 evt.setCancelled(true);
                 final Player player = (Player) evt.getPlayer();
-                UUID uuid = player.getUniqueId();
-                if (opened.contains(uuid.toString())) {
-                    player.sendMessage(ChatColor.DARK_RED + "You've already opened the origin chest.");
-                } else {
-                    opened.add(uuid.toString());
-                    plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            Inventory inventory = plugin.getServer().createInventory(null, 9, "Origin chest");
-                            inventory.setItem(5, plugin.getRockets().makeRocket());
-                            inventory.setItem(4, new ItemStack(Material.APPLE));
-                            inventory.setItem(6, new ItemStack(Material.APPLE));
-                            player.openInventory(inventory);
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onChestClose(InventoryCloseEvent evt) {
-        // This is so that the player can't leave any items in the origin chest.
-        if (evt.getInventory().getHolder() == null && evt.getPlayer() instanceof Player && evt.getInventory().getTitle().equals("Origin chest")) {
-            Player player = (Player) evt.getPlayer();
-            if (opened.contains(player.getUniqueId().toString())) {
-                for (ItemStack stack : evt.getInventory().getContents()) {
-                    if (stack != null) {
-                        if (player.getInventory().firstEmpty() == -1) {
-                            player.getLocation().getWorld().dropItem(player.getLocation(), stack);
-                        } else {
-                            player.getInventory().addItem(stack);
-                        }
+                plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        Inventory inventory = plugin.getServer().createInventory(null, 9, "Origin");
+                        inventory.setItem(4, plugin.getRockets().makeRocket());
+                        player.openInventory(inventory);
                     }
-                }
+                });
             }
         }
     }
