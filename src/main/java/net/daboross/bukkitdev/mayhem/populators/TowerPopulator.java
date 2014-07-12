@@ -33,63 +33,122 @@ public class TowerPopulator extends BlockPopulator {
 
     private static final List<BlockFace> FACES = Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH);
 
-    private boolean isAdjacentChunkLoaded(Block block, BlockFace face) {
+    private void ensureAdjacentChunkLoaded(Block block, BlockFace face) throws AdjacentChunkNotLoadedException {
         Location location = block.getLocation().add(face.getModX(), face.getModY(), face.getModZ());
-        return block.getWorld().isChunkLoaded((int) location.getX() >> 4, (int) location.getZ() >> 4);
+        if (!block.getWorld().isChunkLoaded((int) location.getX() >> 4, (int) location.getZ() >> 4)) {
+            throw new AdjacentChunkNotLoadedException();
+        }
+    }
+
+    private Block isLedge(Block startingPosition, BlockFace ledgeDirection) throws AdjacentChunkNotLoadedException {
+        boolean switched = false;
+        BlockFace currentDirection;
+        if (ledgeDirection == BlockFace.NORTH || ledgeDirection == BlockFace.SOUTH) {
+            currentDirection = BlockFace.EAST;
+        } else {
+            currentDirection = BlockFace.NORTH;
+        }
+        Block currentBlock = startingPosition;
+        while (true) {
+            ensureAdjacentChunkLoaded(currentBlock, ledgeDirection);
+            ensureAdjacentChunkLoaded(currentBlock, currentDirection);
+            if (currentBlock.getRelative(ledgeDirection).getRelative(BlockFace.DOWN).getType() != Material.AIR) {
+                Block ledgeBlock = isLedge(currentBlock.getRelative(ledgeDirection), ledgeDirection);
+                if (ledgeBlock != null) {// if we aren't a ledge, report so.
+                    return ledgeBlock;
+                }
+            }
+            if (currentBlock.getRelative(ledgeDirection).getType() != Material.AIR)
+                return currentBlock.getRelative(ledgeDirection);
+            currentBlock = currentBlock.getRelative(currentDirection);
+            if (currentBlock.getRelative(BlockFace.DOWN).getType() == Material.AIR) {
+                if (switched) {
+                    return null; // We're a ledge!
+                } else {
+                    switched = true;
+                    currentDirection = currentDirection.getOppositeFace();
+                    currentBlock = currentBlock.getRelative(currentDirection);
+                }
+            }
+        }
     }
 
     @Override
     public void populate(final World world, final Random random, final Chunk source) {
-        Block currentBlock = source.getBlock(0, 0, 0);
-        Set<BlockFace> onTopOf = new HashSet<>(); // Might be inefficient, but it's pretty and nice.
-        while (true) {
-            if (currentBlock.getType() != Material.AIR) {
-                // Just an if as well so we can clear onTopOf.
-                onTopOf.clear();
-                while (currentBlock.getType() != Material.AIR) {
-                    if (currentBlock.getType() == Material.WOOL) {
-                        // This is only used to create towers. We shouldn't make more than one wool block!
-                        return;
+        try {
+            Block currentBlock = source.getBlock(0, 0, 0);
+            while (true) {
+                if (currentBlock.getType() != Material.AIR) {
+                    while (currentBlock.getType() != Material.AIR) {
+                        if (currentBlock.getType() == Material.WOOL) {
+                            // This is only used to create towers. We shouldn't make more than one wool block!
+                            return;
+                        }
+                        currentBlock = currentBlock.getRelative(BlockFace.UP);
                     }
-                    currentBlock = currentBlock.getRelative(BlockFace.UP);
                 }
-            }
-            boolean changed = false;
-            for (BlockFace face : FACES) {
-                if (!isAdjacentChunkLoaded(currentBlock, face)) {
-                    return; // Let's let the loaded chunk deal with this.
+                boolean changed = false;
+                for (BlockFace face : FACES) {
+                    ensureAdjacentChunkLoaded(currentBlock, face);
+                    if (currentBlock.getRelative(face).getType() != Material.AIR) {
+                        currentBlock = currentBlock.getRelative(face);
+                        changed = true;
+                        break;
+                    }
                 }
-                if (currentBlock.getRelative(face).getType() != Material.AIR) {
-                    currentBlock = currentBlock.getRelative(face);
-                    changed = true;
-                    break;
-                }
-            }
-            if (changed) {
-                continue;
-            }
-            for (BlockFace face : FACES) {
-                if (onTopOf.contains(face)) {
+                if (changed) {
                     continue;
                 }
-                if (!isAdjacentChunkLoaded(currentBlock, face)) {
-                    return; // Let's let the loaded chunk deal with this.
+                while (true) {
+                    boolean switchedSecond = false;
+                    BlockFace currentFace = BlockFace.NORTH;
+                    BlockFace secondFace = BlockFace.EAST;
+                    ensureAdjacentChunkLoaded(currentBlock, currentFace);
+                    Block relativeBlock = currentBlock.getRelative(currentFace);
+                    while (relativeBlock.getRelative(0, -1, 0).getType() != Material.AIR) {
+                        currentBlock = relativeBlock;
+                        ensureAdjacentChunkLoaded(currentBlock, currentFace);
+                        relativeBlock = currentBlock.getRelative(currentFace);
+                    }
+                    while (relativeBlock.getRelative(0, -1, 0).getType() == Material.AIR) {
+                        ensureAdjacentChunkLoaded(currentBlock, secondFace);
+                        currentBlock = currentBlock.getRelative(secondFace);
+                        ensureAdjacentChunkLoaded(currentBlock, currentFace);
+                        relativeBlock = currentBlock.getRelative(currentFace);
+                    }
                 }
-                Block faceRelative = currentBlock.getRelative(face);
-                while (faceRelative.getRelative(BlockFace.DOWN).getType() != Material.AIR && faceRelative.getType() == Material.AIR) {
-                    currentBlock = faceRelative;
-                    faceRelative = currentBlock.getRelative(face);
+                for (BlockFace face : FACES) {
+                    if (onTopOf.contains(face)) {
+                        continue;
+                    }
+                    ensureAdjacentChunkLoaded(currentBlock, face);
+
+                    Block faceRelative = currentBlock.getRelative(face);
+                    while (faceRelative.getRelative(BlockFace.DOWN).getType() != Material.AIR && faceRelative.getType() == Material.AIR) {
+                        currentBlock = faceRelative;
+                        ensureAdjacentChunkLoaded(currentBlock, face);
+                        faceRelative = currentBlock.getRelative(face);
+                    }
+                    if (faceRelative.getType() != Material.AIR) {
+
+                        break; // Let's let the first two inner loops deal with this.
+                    }
+                    // We're on top!
+                    onTopOf.add(face);
                 }
-                if (faceRelative.getType() != Material.AIR) {
-                    break; // Let's let the first two inner loops deal with this.
+                if (onTopOf.containsAll(FACES)) {
+                    currentBlock.setType(Material.WOOL);
+                    return;
                 }
-                // We're on top!
-                onTopOf.add(face);
             }
-            if (onTopOf.containsAll(FACES)) {
-                currentBlock.setType(Material.WOOL);
-                return;
-            }
+        } catch (AdjacentChunkNotLoadedException ignored) {
+            return;// Let's let the loaded chunk deal with this.
+        }
+    }
+
+    public class AdjacentChunkNotLoadedException extends Exception {
+
+        public AdjacentChunkNotLoadedException() {
         }
     }
 }

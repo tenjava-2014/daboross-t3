@@ -28,6 +28,7 @@ import org.bukkit.generator.BlockPopulator;
 
 public class LiquidPopulator extends BlockPopulator {
 
+    //    private int numberCalled = 0;
     public static final List<Material> LIQUIDS = Arrays.asList(Material.LAVA, Material.WATER, Material.STATIONARY_LAVA, Material.STATIONARY_WATER);
 
     private Material getMaterial(World world, Chunk source, Random random) {
@@ -72,21 +73,37 @@ public class LiquidPopulator extends BlockPopulator {
 
     @Override
     public void populate(final World world, final Random random, final Chunk source) {
+        // this is some debug stuff to place signs, disabled for now.
+//        int thisNum = numberCalled++;
+//        Block belowSign = world.getHighestBlockAt(source.getX() * 16 + 8, source.getZ() * 16 + 8).getRelative(0, 20, 0);
+//        belowSign.setType(Material.STONE);
+//        Block sign = belowSign.getRelative(0, 1, 0);
+//        sign.setType(Material.SIGN_POST);
+//        Sign signState = (Sign) sign.getState();
+//        signState.setLine(0, String.valueOf(thisNum));
+//        signState.setLine(1, "Nope");
+//        signState.update();
         Material liquidType = null;
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 Block block = source.getBlock(x, 5, z);
+                world.getHighestBlockAt(block.getX(), block.getZ()).getRelative(0, 20, 0).setType(Material.GLASS);
                 if (block.getType() == Material.AIR) {
                     // We only want to calculate liquid type if we need to use it
                     if (liquidType == null) {
                         liquidType = getMaterial(world, source, random);
+                        // more debug sign stuff.
+//                        signState = (Sign) sign.getState();
+//                        signState.setLine(1, "Yep");
+//                        signState.update();
                         if (liquidType == Material.STATIONARY_LAVA) {
                             liquidType = Material.LAVA;
                         } else if (liquidType == Material.STATIONARY_WATER) {
                             liquidType = Material.WATER;
                         }
                     }
-                    while (block.getType() == Material.AIR) {
+                    while (block.getType() == Material.AIR || block.getType() == Material.STATIONARY_LAVA ||
+                            block.getType() == Material.STATIONARY_WATER) {
                         block.setType(liquidType);
                         block = block.getRelative(BlockFace.DOWN);
                     }
