@@ -74,7 +74,6 @@ public class ChestPopulator extends BlockPopulator {
                             inv.addItem(new ItemStack(Material.LOG, 5 + r.nextInt(20)));
                     }
                 }
-
                 chest.update();
             }
         }

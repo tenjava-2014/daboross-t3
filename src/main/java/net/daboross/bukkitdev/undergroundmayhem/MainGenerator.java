@@ -89,6 +89,6 @@ public class MainGenerator extends ChunkGenerator {
 
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
-        return Arrays.asList(new ChestPopulator(), new LiquidPopulator());
+        return Arrays.asList(new LiquidPopulator(), new ChestPopulator());
     }
 }
