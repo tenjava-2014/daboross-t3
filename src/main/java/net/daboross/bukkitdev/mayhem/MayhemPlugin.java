@@ -22,23 +22,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
 
 public class MayhemPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
-        MetricsLite metrics = null;
-        try {
-            metrics = new MetricsLite(this);
-        } catch (IOException ex) {
-            // We just won't do metrics
-        }
-        if (metrics != null) {
-            metrics.start();
-        }
-
         registerListeners(new NoSlimeListener());
     }
 
